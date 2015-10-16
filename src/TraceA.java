@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,7 +45,8 @@ public class TraceA {
 	
 	public static void main(String[] args) {
 
-		System.out.println("TraceA v1.01, 19.11.2014");
+//		System.out.println("TraceA v1.01, 19.11.2014");
+		System.out.println("TraceA v1.02, 16.10.2015");
 		
 		if (args.length < 2) {
 			System.err.println ("usage: TraceA <TDB-XML-File> <OSA-Log-File-Wildcard> ...\n");
@@ -145,8 +148,26 @@ public class TraceA {
 	{
 		System.out.println("Processing: \"" + logDataFile.getAbsolutePath() + "\"");
 		
-		FileReader logDataFr = new FileReader (logDataFile);
-		BufferedReader logDataBr = new BufferedReader(logDataFr);
+		ZipFile zf = null;
+		BufferedReader logDataBr;
+		
+		if (logDataFile.getName().endsWith(".zip"))
+		{
+			zf = new ZipFile(logDataFile);
+			int len = logDataFile.getName().length();
+			String s0 = logDataFile.getName();
+			String s1 = s0.substring(0, len-4); 
+			String s2 = s1 + ".txt";
+			InputStream in = zf.getInputStream(new ZipEntry(s2));
+			InputStreamReader inr = new InputStreamReader (in);
+			logDataBr = new BufferedReader(inr);
+		}
+		else
+		{
+			FileReader logDataFr = new FileReader (logDataFile);
+			logDataBr = new BufferedReader(logDataFr);
+		}
+		
 		String zeile = "";
 
 		TreeSet<JTvsChangeData> tvsChanges = new TreeSet<JTvsChangeData>();
@@ -202,6 +223,7 @@ public class TraceA {
 		}
 		
 		logDataBr.close();
+		if (zf != null) zf.close();
 
 		// System.out.println(tvsChanges);
 		// System.out.println(oprs);
