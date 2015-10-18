@@ -39,19 +39,19 @@ public class JMeasurement {
 			
 			if (tvsChange.state == JTvsChangeData.CLEAR) {
 				tInterpolated = interpolate (opr0.t, opr1.t, opr0.xr, opr1.xr, boundaryLocation, speed);
-				dtNotCorrected = tvsChange.t - tInterpolated;
+				dtNotCorrected = tvsChange.lineId.tickcount - tInterpolated;
 				dtCorrected = dtNotCorrected + dtCorrection;
 			}
 			else {
 				tInterpolated = interpolate (opr0.t, opr1.t, opr0.xf, opr1.xf, boundaryLocation, speed);
-				dtNotCorrected = tvsChange.t - tInterpolated;
+				dtNotCorrected = tvsChange.lineId.tickcount - tInterpolated;
 				dtCorrected = dtNotCorrected - dtCorrection;
 			}
 		}
 		
 		private int interpolate(int t0, int t1, JLocation x0, JLocation x1, JLocation x, int v)
 		{
-			int t = t0;
+			int t = t0 + (t1-t0)/2;
 			
 			if (x0.seg == x.seg) {
 				int dx = Math.abs(x0.offs - x.offs);
@@ -62,6 +62,9 @@ public class JMeasurement {
 				int dx = Math.abs(x1.offs - x.offs);
 				int dt = (1000 * dx) / v;
 				t = t1 - dt;
+			}
+			else {
+				System.err.println("JMeasurement.interpolate: " + x0.seg  + "  " + x1.seg + "  " + x.seg);
 			}
 			
 			return t;
@@ -82,7 +85,7 @@ public class JMeasurement {
 		
 		public String toString ()
 		{
-			return "\n(TVS id=" + tvsChange.id + ", transistion to " + stateToStr (tvsChange.state) + ", delay=" + dtCorrected + "ms, correction=" + dtCorrection + "ms)";
+			return "\n(TVS id=" + tvsChange.id + ", transistion to " + stateToStr (tvsChange.state) + ", delay=" + dtCorrected + "ms, correction=" + dtCorrection + "ms), speed=" + (int)((speed*3.6)/100.0) + "km/h, uncertainty=" + uncertainty + "cm, tblind="+ (opr1.t-opr0.t) + "ms";
 		}
 		
 }

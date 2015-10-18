@@ -1,12 +1,19 @@
-import java.io.File;
 
-
-public class JOprData implements Comparable<JOprData> {
+public abstract class JOprData implements Comparable<JOprData> {
+	
+	public final int MAX_TRAIN_CONSIST_VEHICLES = 5;
+	
+	public class T_sVehicle {
+		public int iOBCU_UnitID_1;
+		public int iOBCU_UnitID_2;
+		public int iVehicle_Status;
+	}
 
 	public int t;
-	File logDataFile;
-	public int lineNo;
+	public TraceLineIdentification lineId;
 
+	public int trainId; // TRA compatible trainId
+	
 	public int iSourceId;
 	public int iSourceTs;
 	public int iLocIsSecure;
@@ -20,20 +27,14 @@ public class JOprData implements Comparable<JOprData> {
 	public int iTrainType;
 	public int iTrainSpeed;
 	public int iTrainStandstill;
+	public int iTrainConsistId;
+	public int iNumOfVehiclesInTrainConsist;
+	public T_sVehicle asVehicles[] = new T_sVehicle [MAX_TRAIN_CONSIST_VEHICLES];
 	
-	JOprData (int t, File logDataFile, int lineNo)
+	JOprData (TraceLineIdentification lineId)
 	{
-		this.t = t;
-		this.logDataFile = logDataFile;
-		this.lineNo = lineNo;
-	}
-
-	public int compareTo(JOprData obj)
-	{
-		if (this.iSourceId == obj.iSourceId) {
-			return this.t - obj.t;
-		}
-		return this.iSourceId - obj.iSourceId;
+		this.lineId = new TraceLineIdentification(lineId);
+		this.t = lineId.tickcount;
 	}
 	
 	public String toString ()

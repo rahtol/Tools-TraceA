@@ -1,5 +1,3 @@
-import java.io.File;
-
 
 public class JTvsChangeData implements Comparable<JTvsChangeData> {
 	
@@ -7,10 +5,9 @@ public class JTvsChangeData implements Comparable<JTvsChangeData> {
 	public static final int OCCUPIED = 2;
 
 	public int id;
-	public int t;
 	public int state; // 1=Clear, 2=Occupied
-	File logDataFile;
-	public int lineNo;
+	public int t;
+	public TraceLineIdentification lineId;
 	public int usageCount = 0;
 	
 	JTvsChangeData (int id, int t)
@@ -19,22 +16,12 @@ public class JTvsChangeData implements Comparable<JTvsChangeData> {
 		this.t = t;
 	}
 
-	JTvsChangeData (int id, int t, int state, File logDataFile, int lineNo)
+	JTvsChangeData (int id, String state, TraceLineIdentification lineId)
 	{
 		this.id = id;
-		this.t = t;
-		this.state = state;
-		this.logDataFile = logDataFile;
-		this.lineNo = lineNo;
-	}
-
-	JTvsChangeData (int id, int t, String state, File logDataFile, int lineNo)
-	{
-		this.id = id;
-		this.t = t;
 		this.state = 0;
-		this.logDataFile = logDataFile;
-		this.lineNo = lineNo;
+		this.lineId = new TraceLineIdentification(lineId);
+		this.t = this.lineId.tickcount;
 		
 		if (state.equals("Clear")) {
 			this.state = 1;
@@ -54,6 +41,6 @@ public class JTvsChangeData implements Comparable<JTvsChangeData> {
 	
 	public String toString ()
 	{
-		return "(id=" + id + ", t=" + t + ", state=" + state + ")";
+		return "(id=" + id + ", t=" + ((lineId!=null)?lineId.tickcount:"?") + ", state=" + state + ")";
 	}
 }
