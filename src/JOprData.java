@@ -41,4 +41,15 @@ public abstract class JOprData implements Comparable<JOprData> {
 	{
 		return "\n(iSourceId=" + iSourceId + ", t=" + t + ")";
 	}
+
+	public boolean cmpxf (int seg, int offs)
+	{
+		return (seg == xf.seg) && (offs == xf.offs);
+	}
+
+	public boolean cmpxr (int seg, int offs)
+	{
+		return (seg == xr.seg) && (offs == xr.offs);
+	}
+
 }

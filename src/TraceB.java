@@ -24,6 +24,8 @@ public class TraceB {
 	static TraceLineIdentification lineId = new TraceLineIdentification();
 	static TvsPhyVacParser tvsPhyVacParser = new TvsPhyVacParser();
 	static OprParser oprParser = new OprParser(JOprDataB.class);
+	static Launch256LineParser launch256parser = new Launch256LineParser();
+	static SusLineParser susLineParser = new SusLineParser();
 
 	static HashMap<Integer,Integer> segLength = TdbProcessing.segLength;
 	static JTvsBoundaryTreeSet tvsBoundaries = TdbProcessing.tvsBoundaries;
@@ -32,7 +34,7 @@ public class TraceB {
 	
 	public static void main(String[] args) {
 
-		System.out.println("TraceB v1.00, 18.10.2015");
+		System.out.println("TraceB v1.01, 19.10.2015");
 		
 		if (args.length < 2) {
 			System.err.println ("usage: TraceB <TDB-XML-File> <OSA-Log-File-Wildcard> ...\n");
@@ -112,6 +114,11 @@ public class TraceB {
 			
 			// check for position report
 			oprParser.parseLine(zeile, lineId);
+			
+			// check for launch of process_opr propagation
+			launch256parser.parseLine(zeile, lineId);
+			
+			susLineParser.parseLine(zeile, lineId);
 		}
 		
 		logDataBr.close();
