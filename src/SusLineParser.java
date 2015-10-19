@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -34,6 +35,7 @@ public class SusLineParser implements TraceLineParser {
 				sa.susGeoCond.seg = seg;
 				sa.susGeoCond.offs = offs;
 				sa.susGeoCond.tvsid = Integer.parseInt(m1.group(4));
+				sa.susGeoCond.opr = chkTrainId(findOpr(seg, offs, lineId.tickcount), sa.trainId);
 				sievingAttempts.add(sa);
 			}
 			else
@@ -57,6 +59,11 @@ public class SusLineParser implements TraceLineParser {
 				sa.susIdle = new SievingAttempt.SusIdle(lineId);
 				sa.susIdle.seg = seg;
 				sa.susIdle.offs = offs;
+				sa.susIdle.opr = chkTrainId(findOpr(seg, offs, lineId.tickcount), sa.trainId);
+			}
+			else
+			{
+				System.err.println("SUS_IDLE without matching SievingAttempt in line " + lineId.lineNo);
 			}
 		}
 
@@ -66,8 +73,8 @@ public class SusLineParser implements TraceLineParser {
 			int seg = Integer.parseInt(m1.group(1));
 			int offs = Integer.parseInt(m1.group(2));
 			JOprData opr = findOpr (seg, offs, lineId.tickcount - 3000);
-			boolean front = opr.cmpxf(seg, offs);
-			boolean rear = opr.cmpxr(seg, offs);
+			boolean front = (opr != null ? opr.cmpxf(seg, offs) : false);
+			boolean rear =  (opr != null ? opr.cmpxr(seg, offs) : false);
 			SievingAttempt sa;
 			if ((front || rear) && ((sa = findSievingAttempt (opr.trainId, front, 1, lineId.tickcount - 5000)) != null))
 			{
@@ -75,25 +82,46 @@ public class SusLineParser implements TraceLineParser {
 				sa.susProven = new SievingAttempt.SusProven(lineId);
 				sa.susProven.seg = seg;
 				sa.susProven.offs = offs;
+				sa.susProven.opr = opr;
+			}
+			else
+			{
+				System.err.println("SUS_PROVEN without matching SievingAttempt in line " + lineId.lineNo);
 			}
 		}
 
 		Matcher m4 = p4.matcher(line);
-		if (m4.matches()) {
+		if (m4.matches())
+		{
+			// TODO
 		}
 
 	}
 	
 	public SievingAttempt findSievingAttempt (int trainId, boolean front, int state, int tNotBefore)
 	{
-		// TODO
-		return null;
+		SievingAttempt key = SievingAttempt.key(trainId, front, state);
+		SievingAttempt sa = sievingAttempts.subSet(key, true, key, true).first();
+		return ((sa.susGeoCond != null) && (sa.susGeoCond.lineId.tickcount >= tNotBefore) ? sa : null);
 	}
 
 	public JOprData findOpr (int seg, int offs, int tNotBefore)
 	{
-		// TODO
+		JOprData k = JOprData.keyB(tNotBefore, 0);
+		NavigableSet<JOprData> candidates = TraceB.oprs.tailSet(k, false);
+		Iterator<JOprData> i = candidates.descendingIterator();
+		while (i.hasNext()) {
+			JOprData opr = i.next();
+			boolean front = opr.cmpxf(seg, offs);
+			boolean rear = opr.cmpxr(seg, offs);
+			if (front || rear) return opr;
+		}
 		return null;
+	}
+	
+	public JOprData chkTrainId (JOprData opr, int trainId)
+	{
+		return (((trainId == 0) || (opr.trainId == trainId)) ? opr : null);
 	}
 	
 }

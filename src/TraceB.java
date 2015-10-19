@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -117,28 +118,32 @@ public class TraceB {
 			
 			// check for launch of process_opr propagation
 			launch256parser.parseLine(zeile, lineId);
-			
+
+			// check for SUS_ lines and DELETES 
 			susLineParser.parseLine(zeile, lineId);
 		}
 		
 		logDataBr.close();
 		if (zf != null) zf.close();
 
-		// System.out.println(tvsChanges);
-		// System.out.println(oprs);
-		
 	}  // of processLog
 	
 	static void evaluate()
 	{
-		// TODO
-		
 		FileWriter outf;
 		try {
 			outf = new FileWriter("TraceB.out");
-			// TODO
-//	       	outf.write(measurementsClear + "\n" + measurementsOccupied + "\n");
+			outf.write("<sievingAttempts size=\"" + SusLineParser.sievingAttempts.size() + "\">\n");
+			
+			Iterator<SievingAttempt> i = SusLineParser.sievingAttempts.iterator();
+			while (i.hasNext()) {
+				SievingAttempt sa = i.next();
+				outf.write(sa.pr(1));
+			}
+			
+			outf.write("<\\sievingAttempts>\n");
 	       	outf.close();
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

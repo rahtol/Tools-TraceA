@@ -79,4 +79,11 @@ public class TraceLineIdentification implements TraceLineParser {
 		
 	}
 
+	public String pr(int lvl)
+	{
+		String indent = "                ".substring(0, 2*lvl);
+		
+		return
+			String.format("%s<lineid t=\"%d\" fn=\"%s\" lineno=\"%d\"\\>\n", indent, this.tickcount, this.file.getName(), this.lineNo);
+	}
 }

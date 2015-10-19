@@ -25,7 +25,7 @@ public class TraceA {
 	 */
 	static TraceLineIdentification lineId = new TraceLineIdentification();
 	static TvsPhyVacParser tvsPhyVacParser = new TvsPhyVacParser();
-	static OprParser oprParser = new OprParser(JOprDataB.class);
+	static OprParser oprParser = new OprParser(JOprDataA.class);
 
 	static HashMap<Integer,Integer> segLength = TdbProcessing.segLength;
 	static JTvsBoundaryTreeSet tvsBoundaries = TdbProcessing.tvsBoundaries;

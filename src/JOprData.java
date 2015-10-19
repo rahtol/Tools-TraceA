@@ -31,12 +31,26 @@ public abstract class JOprData implements Comparable<JOprData> {
 	public int iNumOfVehiclesInTrainConsist;
 	public T_sVehicle asVehicles[] = new T_sVehicle [MAX_TRAIN_CONSIST_VEHICLES];
 	
+	protected JOprData ()
+	{
+	}
+	
 	JOprData (TraceLineIdentification lineId)
 	{
 		this.lineId = new TraceLineIdentification(lineId);
 		this.t = lineId.tickcount;
 	}
 	
+	public static JOprData keyA (int iSourceId, int t)
+	{
+		return new JOprDataA(iSourceId, t);
+	}
+
+	public static JOprData keyB (int t, int trainId)
+	{
+		return new JOprDataB(t, trainId);
+	}
+
 	public String toString ()
 	{
 		return "\n(iSourceId=" + iSourceId + ", t=" + t + ")";
