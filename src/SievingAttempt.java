@@ -76,6 +76,7 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 		public int seg;
 		public int offs;
 		public int tvsid;
+		public JOprData opr;
 		
 		DeleteS (TraceLineIdentification lineId)
 		{
@@ -101,6 +102,8 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 	public SusIdle susIdle;
 	public SusProven susProven;
 	public DeleteS deleteS;
+	
+	public JTvsChangeData tvschange;
 	
 	public SievingAttempt ()
 	{
@@ -140,6 +143,7 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 				(this.susIdle != null ? this.susIdle.pr(lvl+1) : "") +
 				(this.susProven != null ? this.susProven.pr(lvl+1) : "") +
 				(this.deleteS != null ? this.deleteS.pr(lvl+1) : "") +
+				(this.tvschange != null ? this.tvschange.pr(lvl+1) : "") +
 			String.format("%s<\\sievingattempt>\n", indent);
 	}
 }
