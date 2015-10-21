@@ -69,7 +69,7 @@ public class TraceB {
 			}
 			evaluate();
 		} catch (Exception e) {
-			System.err.println("file not found: "+args[1]);
+			System.err.println("Excption: " + e.getMessage());
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -133,7 +133,7 @@ public class TraceB {
 		FileWriter outf;
 		try {
 			outf = new FileWriter("TraceB.out");
-			outf.write("<sievingAttempts size=\"" + SusLineParser.sievingAttempts.size() + "\">\n");
+			outf.write("<sievingattempts size=\"" + SusLineParser.sievingAttempts.size() + "\">\n");
 			
 			Iterator<SievingAttempt> i = SusLineParser.sievingAttempts.iterator();
 			while (i.hasNext()) {
@@ -141,7 +141,7 @@ public class TraceB {
 				outf.write(sa.pr(1));
 			}
 			
-			outf.write("<\\sievingAttempts>\n");
+			outf.write("<\\sievingattempts>\n");
 	       	outf.close();
 
 		} catch (IOException e) {

@@ -1,4 +1,8 @@
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,5 +89,10 @@ public class TraceLineIdentification implements TraceLineParser {
 		
 		return
 			String.format("%s<lineid t=\"%d\" fn=\"%s\" lineno=\"%d\"\\>\n", indent, this.tickcount, this.file.getName(), this.lineNo);
+	}
+	
+	public String timeOfDay()
+	{
+		return LocalDateTime.of(1985, 1, 1, 0, 0, 0).plusSeconds(timeofday).format(DateTimeFormatter.ISO_DATE_TIME);
 	}
 }

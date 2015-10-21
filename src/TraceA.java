@@ -73,7 +73,7 @@ public class TraceA {
 			}
 			evaluate();
 		} catch (Exception e) {
-			System.err.println("file not found: "+args[1]);
+			System.err.println("Excption: " + e.getMessage());
 			e.printStackTrace();
 			System.exit(-1);
 		}

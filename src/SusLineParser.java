@@ -48,8 +48,8 @@ public class SusLineParser implements TraceLineParser {
 		Matcher m2 = p2.matcher(line);
 		if (m2.matches())
 		{
-			int seg = Integer.parseInt(m1.group(1));
-			int offs = Integer.parseInt(m1.group(2));
+			int seg = Integer.parseInt(m2.group(1));
+			int offs = Integer.parseInt(m2.group(2));
 			boolean front = TraceB.launch256parser.cmpxf(seg, offs);
 			boolean rear = TraceB.launch256parser.cmpxr(seg, offs);
 			SievingAttempt sa;
@@ -70,8 +70,8 @@ public class SusLineParser implements TraceLineParser {
 		// SUS_PROVEN
 		Matcher m3 = p3.matcher(line);
 		if (m3.matches()) {
-			int seg = Integer.parseInt(m1.group(1));
-			int offs = Integer.parseInt(m1.group(2));
+			int seg = Integer.parseInt(m3.group(1));
+			int offs = Integer.parseInt(m3.group(2));
 			JOprData opr = findOpr (seg, offs, lineId.tickcount - 3000);
 			boolean front = (opr != null ? opr.cmpxf(seg, offs) : false);
 			boolean rear =  (opr != null ? opr.cmpxr(seg, offs) : false);

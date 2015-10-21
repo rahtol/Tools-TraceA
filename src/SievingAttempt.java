@@ -20,6 +20,7 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 			return
 				String.format("%s<susgeocond seg=\"%d\" offs=\"%d\" tvsid=\"%d\">\n", indent, this.seg, this.offs, this.tvsid) +
 					this.lineId.pr(lvl+1) +
+					(opr != null ? opr.pr(lvl+1) : "") +
 				String.format("%s<\\susgeocond>\n", indent);
 		}
 	}
@@ -42,6 +43,7 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 			return
 				String.format("%s<susidle seg=\"%d\" offs=\"%d\">\n", indent, this.seg, this.offs) +
 					this.lineId.pr(lvl+1) +
+					(opr != null ? opr.pr(lvl+1) : "") +
 				String.format("%s<\\susidle>\n", indent);
 		}
 	}
@@ -64,6 +66,7 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 			return
 				String.format("%s<susproven seg=\"%d\" offs=\"%d\">\n", indent, this.seg, this.offs) +
 					this.lineId.pr(lvl+1) +
+					(opr != null ? opr.pr(lvl+1) : "") +
 				String.format("%s<\\susproven>\n", indent);
 		}
 	}
@@ -132,7 +135,7 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 		String indent = "                ".substring(0, 2*lvl);
 		
 		return
-			String.format("%s<sievingattempt state=\"%d\" trainid=\"%d\" frontrear=\"%s\">\n", indent, this.state, this.trainId, (this.front ? "F" : "R")) +
+			String.format("%s<sievingattempt state=\"%d\" trainid=\"%d\" frontrear=\"%s\" timeofday=\"%s\">\n", indent, this.state, this.trainId, (this.front ? "F" : "R"), this.susGeoCond.lineId.timeOfDay()) +
 				(this.susGeoCond != null ? this.susGeoCond.pr(lvl+1) : "") +
 				(this.susIdle != null ? this.susIdle.pr(lvl+1) : "") +
 				(this.susProven != null ? this.susProven.pr(lvl+1) : "") +
