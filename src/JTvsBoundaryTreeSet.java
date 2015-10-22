@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 
 
@@ -73,6 +74,20 @@ public class JTvsBoundaryTreeSet extends TreeSet<JTvsBoundaryData> {
 		}
 		
 		return rc;
+	}
+
+	/**
+	 * Find nearest boundary of TVS "tvsid" starting from Location "x0"
+	 * @param x0		start location, input parameter, also specifies direction to search
+	 * @param tvsid		id of TVS
+	 * @return			a JTvsBoundaryData or null
+	 */
+	public JTvsBoundaryData search (JLocation x0, int tvsid)
+	{
+//		NavigableSet<JTvsBoundaryData> resultsubset = subSet(new JTvsBoundaryData(seg, offsA), new JTvsBoundaryData(seg, offsE));
+		// TODO
+		return null;
+		
 	}
 }
 

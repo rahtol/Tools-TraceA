@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,6 +20,7 @@ public class TdbProcessing {
 
 	static HashMap<Integer,Integer> segLength = new HashMap<Integer,Integer>();
 	static JTvsBoundaryTreeSet tvsBoundaries = new JTvsBoundaryTreeSet();
+	static NavigableSet<SegAdjacency> segAdj = new TreeSet<SegAdjacency>();
 	
 	static void processTdb (final File tdbXmlFile) throws IOException, ParserConfigurationException, SAXException
 	{
@@ -46,6 +48,12 @@ public class TdbProcessing {
 					segLength.put(seg, seglen);
 					int segmentidrightdown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdRightDown").item(0).getTextContent().trim());
 					int segmentidrightup = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdRightUp").item(0).getTextContent().trim());
+					int segmentidleftdown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdLeftDown").item(0).getTextContent().trim());
+					int segmentidleftup = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdLeftUp").item(0).getTextContent().trim());
+					segAdj.add(new SegAdjacency(seg, SegAdjacency.DOWN, SegAdjacency.RIGHT, segmentidrightdown));
+					segAdj.add(new SegAdjacency(seg, SegAdjacency.UP, SegAdjacency.RIGHT, segmentidrightup));
+					segAdj.add(new SegAdjacency(seg, SegAdjacency.DOWN, SegAdjacency.LEFT, segmentidleftdown));
+					segAdj.add(new SegAdjacency(seg, SegAdjacency.UP, SegAdjacency.LEFT, segmentidleftup));
 					int segmentendtypedown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentEndTypeDown").item(0).getTextContent().trim());
 					int segmentendtypeup = Integer.parseInt(eElementItem.getElementsByTagName("SegmentEndTypeUp").item(0).getTextContent().trim());
 					int segmentdirectionrightdown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentDirectionRightDown").item(0).getTextContent().trim());
@@ -104,4 +112,25 @@ public class TdbProcessing {
 			}
 		}
 	}
+	
+	public static boolean nxSeg(JLocation loc, int rl)
+	{
+		// TODO
+		return false;
+		
+	}
+	
+	/**
+	 * Is there a path from location "from" to location "to".
+	 * @param from		start location of path, input only
+	 * @param to		target location of path. dir irrelevant on input, updated on output
+	 * @param maxdist	maximum distance to be searched
+	 * @return			length in cm of path, negative if there is no path shorter that maxdist
+	 */
+	public static int dist(JLocation from, JLocation to, int maxdist)
+	{
+		// TODO
+		return -1;
+	}
+
 }
