@@ -1,12 +1,14 @@
 
 public class SievingAttempt implements Comparable<SievingAttempt> {
 	
-	public static class SusGeoCond {
+	public class SusGeoCond {
 		public TraceLineIdentification lineId;
 		public int seg;
 		public int offs;
+		public EnumOri ori;
 		public int tvsid;
 		public JOprData opr;
+		public int dist;
 		
 		SusGeoCond (TraceLineIdentification lineId)
 		{
@@ -15,21 +17,29 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 		
 		public String pr(int lvl)
 		{
+			int dt = this.lineId.tickcount - susGeoCond.lineId.tickcount;
 			String indent = "                ".substring(0, 2*lvl);
 			
 			return
-				String.format("%s<susgeocond seg=\"%d\" offs=\"%d\" tvsid=\"%d\">\n", indent, this.seg, this.offs, this.tvsid) +
+				String.format("%s<susgeocond seg=\"%d\" offs=\"%d\" tvsid=\"%d\" dist=\"%d\" dt=\"%d\">\n", indent, this.seg, this.offs, this.tvsid, this.dist, dt) +
 					this.lineId.pr(lvl+1) +
 					(opr != null ? opr.pr(lvl+1) : "") +
-				String.format("%s<\\susgeocond>\n", indent);
+				String.format("%s</susgeocond>\n", indent);
+		}
+
+		public JLocation x0() {
+			
+			return new JLocation (seg, offs, ori);
 		}
 	}
 	
-	public static class SusIdle {
+	public class SusIdle {
 		public TraceLineIdentification lineId;
 		public int seg;
 		public int offs;
+		public EnumOri ori;
 		public JOprData opr;
+		public int dist;
 		
 		SusIdle (TraceLineIdentification lineId)
 		{
@@ -38,21 +48,29 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 		
 		public String pr(int lvl)
 		{
+			int dt = this.lineId.tickcount - susGeoCond.lineId.tickcount;
 			String indent = "                ".substring(0, 2*lvl);
 			
 			return
-				String.format("%s<susidle seg=\"%d\" offs=\"%d\">\n", indent, this.seg, this.offs) +
+				String.format("%s<susidle seg=\"%d\" offs=\"%d\" dist=\"%d\" dt=\"%d\">\n", indent, this.seg, this.offs, this.dist, dt) +
 					this.lineId.pr(lvl+1) +
 					(opr != null ? opr.pr(lvl+1) : "") +
-				String.format("%s<\\susidle>\n", indent);
+				String.format("%s</susidle>\n", indent);
+		}
+		
+		public JLocation x0() {
+			
+			return new JLocation (seg, offs, ori);
 		}
 	}
 	
-	public static class SusProven {
+	public class SusProven {
 		public TraceLineIdentification lineId;
 		public int seg;
 		public int offs;
+		public EnumOri ori;
 		public JOprData opr;
+		public int dist;
 		
 		SusProven (TraceLineIdentification lineId)
 		{
@@ -61,22 +79,30 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 		
 		public String pr(int lvl)
 		{
+			int dt = this.lineId.tickcount - susGeoCond.lineId.tickcount;
 			String indent = "                ".substring(0, 2*lvl);
 			
 			return
-				String.format("%s<susproven seg=\"%d\" offs=\"%d\">\n", indent, this.seg, this.offs) +
+				String.format("%s<susproven seg=\"%d\" offs=\"%d\" dist=\"%d\" dt=\"%d\">\n", indent, this.seg, this.offs, this.dist, dt) +
 					this.lineId.pr(lvl+1) +
 					(opr != null ? opr.pr(lvl+1) : "") +
-				String.format("%s<\\susproven>\n", indent);
+				String.format("%s</susproven>\n", indent);
+		}
+
+		public JLocation x0() {
+			
+			return new JLocation (seg, offs, ori);
 		}
 	}
 	
-	public static class DeleteS {
+	public class DeleteS {
 		public TraceLineIdentification lineId;
 		public int seg;
 		public int offs;
+		public EnumOri ori;
 		public int tvsid;
 		public JOprData opr;
+		public int dist;
 		
 		DeleteS (TraceLineIdentification lineId)
 		{
@@ -85,12 +111,18 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 		
 		public String pr(int lvl)
 		{
+			int dt = this.lineId.tickcount - susGeoCond.lineId.tickcount;
 			String indent = "                ".substring(0, 2*lvl);
 			
 			return
-				String.format("%s<deletes seg=\"%d\" offs=\"%d\" tvsid=\"%d\">\n", indent, this.seg, this.offs, this.tvsid) +
+				String.format("%s<deletes seg=\"%d\" offs=\"%d\" tvsid=\"%d\" dist=\"%d\" dt=\"%d\">\n", indent, this.seg, this.offs, this.tvsid, this.dist, dt) +
 					this.lineId.pr(lvl+1) +
-				String.format("%s<\\deletes>\n", indent);
+				String.format("%s</deletes>\n", indent);
+		}
+		
+		public JLocation x0() {
+			
+			return new JLocation (seg, offs, ori);
 		}
 	}
 	
@@ -104,6 +136,7 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 	public DeleteS deleteS;
 	
 	public JTvsChangeData tvschange;
+	public JTvsBoundaryData tvsboundary;
 	
 	public SievingAttempt ()
 	{

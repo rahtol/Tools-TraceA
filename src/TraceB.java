@@ -35,7 +35,8 @@ public class TraceB {
 	
 	public static void main(String[] args) {
 
-		System.out.println("TraceB v1.01, 19.10.2015");
+//		System.out.println("TraceB v1.01, 19.10.2015");
+		System.out.println("TraceB v1.02, 23.10.2015");
 		
 		if (args.length < 2) {
 			System.err.println ("usage: TraceB <TDB-XML-File> <OSA-Log-File-Wildcard> ...\n");

@@ -1,7 +1,5 @@
 import java.io.File;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,7 +86,7 @@ public class TraceLineIdentification implements TraceLineParser {
 		String indent = "                ".substring(0, 2*lvl);
 		
 		return
-			String.format("%s<lineid t=\"%d\" fn=\"%s\" lineno=\"%d\"\\>\n", indent, this.tickcount, this.file.getName(), this.lineNo);
+			String.format("%s<lineid t=\"%d\" fn=\"%s\" lineno=\"%d\"/>\n", indent, this.tickcount, this.file.getName(), this.lineNo);
 	}
 	
 	public String timeOfDay()

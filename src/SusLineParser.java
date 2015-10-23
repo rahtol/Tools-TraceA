@@ -31,13 +31,15 @@ public class SusLineParser implements TraceLineParser {
 				sa.state = 1;  // SUS_GEO_COND seen last, incomplete
 				sa.trainId = Launch256LineParser.lastLaunch256Data.trainId;
 				sa.front = front;
-				sa.susGeoCond = new SievingAttempt.SusGeoCond(lineId);
+				sa.susGeoCond = sa.new SusGeoCond(lineId);
 				sa.susGeoCond.seg = seg;
 				sa.susGeoCond.offs = offs;
+				sa.susGeoCond.ori = (front ? Launch256LineParser.lastLaunch256Data.xf.ori : Launch256LineParser.lastLaunch256Data.xr.ori.invert());
 				sa.susGeoCond.tvsid = Integer.parseInt(m1.group(4));
 				sa.susGeoCond.opr = chkTrainId(findOpr(seg, offs, lineId.tickcount), sa.trainId);
 				sievingAttempts.add(sa);
 				sa.tvschange = findTvschange(sa.susGeoCond.tvsid, sa.susGeoCond.lineId.tickcount, -3000, +5000);
+				sa.susGeoCond.dist = TdbProcessing.tvsBoundaries.search (sa.susGeoCond.x0(), sa.susGeoCond.tvsid, 10000, sa.tvsboundary);
 			}
 			else
 			{
@@ -57,12 +59,19 @@ public class SusLineParser implements TraceLineParser {
 			if ((front || rear) && ((sa = findSievingAttempt (Launch256LineParser.lastLaunch256Data.trainId, front, 1, lineId.tickcount - 5000)) != null))
 			{
 				sa.state = 10; // failed and complete, i.e. SUS_IDLE
-				sa.susIdle = new SievingAttempt.SusIdle(lineId);
+				sa.susIdle = sa.new SusIdle(lineId);
 				sa.susIdle.seg = seg;
 				sa.susIdle.offs = offs;
+				sa.susIdle.ori = (front ? Launch256LineParser.lastLaunch256Data.xf.ori : Launch256LineParser.lastLaunch256Data.xr.ori.invert());
 				sa.susIdle.opr = chkTrainId(findOpr(seg, offs, lineId.tickcount), sa.trainId);
 				if (sa.tvschange == null) 
 					sa.tvschange = findTvschange(sa.susGeoCond.tvsid, sa.susIdle.lineId.tickcount, -3000, +5000);
+				JTvsBoundaryData tvsboundary = null;
+				sa.susIdle.dist = TdbProcessing.tvsBoundaries.search (sa.susIdle.x0(), sa.susGeoCond.tvsid, 10000, tvsboundary);
+				if (tvsboundary != sa.tvsboundary)
+				{
+					System.err.println("SUS_IDLE: tvsboundary mismatch.");
+				}
 			}
 			else
 			{
@@ -82,12 +91,19 @@ public class SusLineParser implements TraceLineParser {
 			if ((front || rear) && ((sa = findSievingAttempt (opr.trainId, front, 1, lineId.tickcount - 5000)) != null))
 			{
 				sa.state = 2; // successful but still incomplete, i.e. SUS_PROVEN
-				sa.susProven = new SievingAttempt.SusProven(lineId);
+				sa.susProven = sa.new SusProven(lineId);
 				sa.susProven.seg = seg;
 				sa.susProven.offs = offs;
+				sa.susProven.ori = (front ? opr.xf.ori : opr.xr.ori.invert());
 				sa.susProven.opr = opr;
 				if (sa.tvschange == null) 
 					sa.tvschange = findTvschange(sa.susGeoCond.tvsid, sa.susProven.lineId.tickcount, -3000, +5000);
+				JTvsBoundaryData tvsboundary = null;
+				sa.susProven.dist = TdbProcessing.tvsBoundaries.search (sa.susProven.x0(), sa.susGeoCond.tvsid, 10000, tvsboundary);
+				if (tvsboundary != sa.tvsboundary)
+				{
+					System.err.println("SUS_Proven: tvsboundary mismatch.");
+				}
 			}
 			else
 			{
@@ -107,13 +123,20 @@ public class SusLineParser implements TraceLineParser {
 			if ((front || rear) && ((sa = findSievingAttempt (opr.trainId, front, 2, lineId.tickcount - 5000)) != null))
 			{
 				sa.state = 3; // successful and complete
-				sa.deleteS = new SievingAttempt.DeleteS(lineId);
+				sa.deleteS = sa.new DeleteS(lineId);
 				sa.deleteS.seg = seg;
 				sa.deleteS.offs = offs;
+				sa.deleteS.ori = (front ? opr.xf.ori : opr.xr.ori.invert());
 				sa.deleteS.tvsid = Integer.parseInt(m4.group(4));
 				sa.deleteS.opr = opr;
 				if (sa.tvschange == null) 
 					sa.tvschange = findTvschange(sa.susGeoCond.tvsid, sa.deleteS.lineId.tickcount, -3000, +5000);
+				JTvsBoundaryData tvsboundary = null;
+				sa.deleteS.dist = TdbProcessing.tvsBoundaries.search (sa.deleteS.x0(), sa.deleteS.tvsid, 10000, tvsboundary);
+				if (tvsboundary != sa.tvsboundary)
+				{
+					System.err.println("SUS_Proven: tvsboundary mismatch.");
+				}
 			}
 			else
 			{

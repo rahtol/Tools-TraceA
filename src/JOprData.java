@@ -71,7 +71,7 @@ public abstract class JOprData implements Comparable<JOprData> {
 		String indent = "                ".substring(0, 2*lvl);
 		
 		return
-			String.format("%s<opr speed=\"%.1f\" uncertainty=\"%d\"\\>\n", indent, this.iTrainSpeed*3.6/100, this.iLocUncertainty);
+			String.format("%s<opr speed=\"%.1f\" uncertainty=\"%d\"/>\n", indent, this.iTrainSpeed*3.6/100, this.iLocUncertainty);
 	}
 }
 
