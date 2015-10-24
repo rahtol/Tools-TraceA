@@ -56,7 +56,7 @@ public class JTvsChangeData implements Comparable<JTvsChangeData> {
 		return
 			String.format("%s<tvschange id=\"%d\" t=\"%d\" state=\"%s\">\n", indent, this.id, this.t, prState()) +
 				this.lineId.pr(lvl+1) +
-			String.format("%s<\\tvschange>\n", indent);
+			String.format("%s</tvschange>\n", indent);
 	}
 	
 	public String prState()

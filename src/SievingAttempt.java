@@ -177,6 +177,6 @@ public class SievingAttempt implements Comparable<SievingAttempt> {
 				(this.susProven != null ? this.susProven.pr(lvl+1) : "") +
 				(this.deleteS != null ? this.deleteS.pr(lvl+1) : "") +
 				(this.tvschange != null ? this.tvschange.pr(lvl+1) : "") +
-			String.format("%s<\\sievingattempt>\n", indent);
+			String.format("%s</sievingattempt>\n", indent);
 	}
 }

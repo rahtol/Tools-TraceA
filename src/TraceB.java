@@ -142,7 +142,7 @@ public class TraceB {
 				outf.write(sa.pr(1));
 			}
 			
-			outf.write("<\\sievingattempts>\n");
+			outf.write("</sievingattempts>\n");
 	       	outf.close();
 
 		} catch (IOException e) {
