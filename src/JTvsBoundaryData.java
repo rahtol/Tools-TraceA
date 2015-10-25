@@ -51,7 +51,7 @@ public class JTvsBoundaryData implements Comparable<JTvsBoundaryData> {
 		String indent = "                ".substring(0, 2*lvl);
 		
 		return
-			String.format("%s<tvsboundary seg=\"%d\" offs=\"%d\" tvsid=\"%d\" ori=\"%d\" dist=\"%d\"/>\n", indent, this.seg, this.offs, (this.ori==EnumOri.ORIPOS ? "pos" : "neg"), this.id);
+			String.format("%s<tvsboundary seg=\"%d\" offs=\"%d\" ori=\"%s\" tvsid=\"%d\"/>\n", indent, this.seg, this.offs, (this.ori==EnumOri.ORIPOS ? "pos" : "neg"), this.id);
 	}
 
 }
