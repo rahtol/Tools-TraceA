@@ -66,4 +66,14 @@ public abstract class JOprData implements Comparable<JOprData> {
 		return (seg == xr.seg) && (offs == xr.offs);
 	}
 
+	public String pr(int lvl)
+	{
+		String indent = "                ".substring(0, 2*lvl);
+		
+		return
+			String.format("%s<opr xfseg=\"%d\" xfoffs=\"%d\" xfori=\"%s\" xrseg=\"%d\" xroffs=\"%d\" xrori=\"%s\" speed=\"%.1f\" uncertainty=\"%d\">\n", indent, this.xf.seg, this.xf.offs, (this.xf.ori==EnumOri.ORIPOS ? "pos" : "neg"), this.xr.seg, this.xr.offs, (this.xr.ori==EnumOri.ORIPOS ? "pos" : "neg"),  this.iTrainSpeed*3.6/100, this.iLocUncertainty) +
+				this.lineId.pr(lvl+1) +
+			String.format("%s</opr>\n", indent);
+	}
 }
+

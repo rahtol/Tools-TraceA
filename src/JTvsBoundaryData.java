@@ -45,4 +45,13 @@ public class JTvsBoundaryData implements Comparable<JTvsBoundaryData> {
 	{
 		return "\n(seg=" + seg + ", offs=" + offs + ", ori=" + ori + ", id=" + id + ")";
 	}
+	
+	public String pr(int lvl)
+	{
+		String indent = "                ".substring(0, 2*lvl);
+		
+		return
+			String.format("%s<tvsboundary seg=\"%d\" offs=\"%d\" ori=\"%s\" tvsid=\"%d\"/>\n", indent, this.seg, this.offs, (this.ori==EnumOri.ORIPOS ? "pos" : "neg"), this.id);
+	}
+
 }

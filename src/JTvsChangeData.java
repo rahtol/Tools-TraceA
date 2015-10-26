@@ -43,4 +43,30 @@ public class JTvsChangeData implements Comparable<JTvsChangeData> {
 	{
 		return "(id=" + id + ", t=" + ((lineId!=null)?lineId.tickcount:"?") + ", state=" + state + ")";
 	}
+	
+	public static JTvsChangeData key(int id, int t)
+	{
+		return new JTvsChangeData (id, t);
+	}
+	
+	public String pr(int lvl)
+	{
+		String indent = "                ".substring(0, 2*lvl);
+		
+		return
+			String.format("%s<tvschange id=\"%d\" t=\"%d\" state=\"%s\">\n", indent, this.id, this.t, prState()) +
+				this.lineId.pr(lvl+1) +
+			String.format("%s</tvschange>\n", indent);
+	}
+	
+	public String prState()
+	{
+		String s;
+		switch (state){
+		case 1: s = "clear"; break;
+		case 2: s = "occupied"; break;
+		default: s = String.format("?%d?", state); break;
+		}
+		return s;
+	}
 }

@@ -38,7 +38,8 @@ public class TraceA {
 
 //		System.out.println("TraceA v1.01, 19.11.2014");
 //		System.out.println("TraceA v1.02, 16.10.2015");
-		System.out.println("TraceA v1.03, 18.10.2015");
+//		System.out.println("TraceA v1.03, 18.10.2015");
+		System.out.println("TraceA v1.04, 24.10.2015");
 		
 		if (args.length < 2) {
 			System.err.println ("usage: TraceA <TDB-XML-File> <OSA-Log-File-Wildcard> ...\n");
@@ -73,7 +74,7 @@ public class TraceA {
 			}
 			evaluate();
 		} catch (Exception e) {
-			System.err.println("file not found: "+args[1]);
+			System.err.println("Excption: " + e.getMessage());
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -147,8 +148,28 @@ public class TraceA {
 		FileWriter outf;
 		try {
 			outf = new FileWriter("TraceA.out");
-	       	outf.write(measurementsClear + "\n" + measurementsOccupied + "\n");
-	       	outf.close();
+			
+//	       	outf.write(measurementsClear + "\n" + measurementsOccupied + "\n");
+			
+			outf.write("<measurements>\n");
+			outf.write("<measurementsclear size=\"" + measurementsClear.size() + "\">\n");
+			Iterator<JMeasurement> i1 = measurementsClear.iterator();
+			while (i1.hasNext()) {
+				JMeasurement m = i1.next();
+				outf.write(m.pr(1));
+			}
+			outf.write("</measurementsclear>\n");
+			
+			outf.write("<measurementsoccupied size=\"" + measurementsOccupied.size() + "\">\n");
+			Iterator<JMeasurement> i2 = measurementsOccupied.iterator();
+			while (i2.hasNext()) {
+				JMeasurement m = i2.next();
+				outf.write(m.pr(1));
+			}
+			outf.write("</measurementsoccupied>\n");
+			outf.write("</measurements>\n");
+
+			outf.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

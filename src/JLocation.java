@@ -1,6 +1,8 @@
 
 public class JLocation {
 
+	public static final int INVALIDSEGID = -1;
+	
 	public int seg;
 	public int offs;
 	public EnumOri ori;
@@ -22,5 +24,9 @@ public class JLocation {
 		if (ori == 2) {
 			this.ori = EnumOri.ORINEG;
 		}
+	}
+
+	public boolean valid() {
+		return TdbProcessing.segLength.containsKey(this.seg);
 	}
 }

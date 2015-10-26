@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 
@@ -74,5 +75,71 @@ public class JTvsBoundaryTreeSet extends TreeSet<JTvsBoundaryData> {
 		
 		return rc;
 	}
+
+	/**
+	 * Find nearest boundary of TVS "tvsid" starting from Location "x0"
+	 * 
+	 * @param x0			start location, input parameter, also specifies direction to search
+	 * @param tvsid			id of TVS
+	 * @param maxdist		maximal distance to search
+	 * @param tvsboundary	out-parameter, specifies the tvsboundary found, if any
+	 * @return				distance im cm to relevant tvsboundary of Integer.Max_VALUE if none found
+	 */
+	public int search (JLocation x0, int tvsid, int maxdist, JTvsBoundaryData tvsboundary)
+	{
+		SortedSet<JTvsBoundaryData> candidates;
+		Iterator<JTvsBoundaryData> i;
+		JTvsBoundaryData tvsb;
+		int offsA;
+		int offsE;
+		int dist;
+		
+		if(x0.ori == EnumOri.ORIPOS)
+		{
+			offsA = x0.offs;
+			offsE = TdbProcessing.segLength.get(x0.seg);
+		}
+		else
+		{
+			offsA = 0;
+			offsE = x0.offs;
+		}
+
+		candidates = subSet(new JTvsBoundaryData(x0.seg, offsA), new JTvsBoundaryData(x0.seg, offsE));
+		i = candidates.iterator();
+		while (i.hasNext())
+		{
+			tvsb = i.next();
+			if ((tvsb.id == tvsid) && (tvsb.ori == x0.ori))
+			{
+				// found relevant boundary
+				tvsboundary = tvsb;
+				dist = Math.abs(tvsboundary.offs - x0.offs); // non-negative value
+				return (dist <= maxdist ? dist : Integer.MAX_VALUE);
+			}
+		}
+
+		// advance to corresponding end of segment
+		if(x0.ori == EnumOri.ORIPOS)
+		{
+			dist = TdbProcessing.segLength.get(x0.seg) - x0.offs;
+			x0.offs = TdbProcessing.segLength.get(x0.seg);
+		}
+		else
+		{
+			dist = x0.offs;
+			x0.offs = 0;
+		}
+		if (dist > maxdist) return -1;  // search length exceeded
+		maxdist -= dist;  //
+
+		// recursion on adjacent segment(s)
+		JLocation x0L = TdbProcessing.nxSeg(x0, SegAdjacency.LEFT);
+		JLocation x0R = TdbProcessing.nxSeg(x0, SegAdjacency.RIGHT);
+		int distL = (x0L.valid() ? search(x0L, tvsid, maxdist, tvsboundary) : Integer.MAX_VALUE);
+		int distR = (x0R.valid() ? search(x0R, tvsid, maxdist, tvsboundary) : Integer.MAX_VALUE);
+		return dist + Math.min(distL, distR);
+	}
+	
 }
 

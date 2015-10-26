@@ -85,7 +85,21 @@ public class JMeasurement {
 		
 		public String toString ()
 		{
-			return "\n(TVS id=" + tvsChange.id + ", transistion to " + stateToStr (tvsChange.state) + ", delay=" + dtCorrected + "ms, correction=" + dtCorrection + "ms), speed=" + (int)((speed*3.6)/100.0) + "km/h, uncertainty=" + uncertainty + "cm, tblind="+ (opr1.t-opr0.t) + "ms";
+			return "\n(TVS id=" + tvsChange.id + ", transistion to " + stateToStr (tvsChange.state) + ", delay=" + dtCorrected + "ms, correction=" + dtCorrected + "ms), speed=" + (int)((speed*3.6)/100.0) + "km/h, uncertainty=" + uncertainty + "cm, tblind="+ (opr1.t-opr0.t) + "ms";
 		}
+		
+		public String pr(int lvl)
+		{
+			String indent = "                ".substring(0, 2*lvl);
+			
+			return
+				String.format("%s<measurement tvsid=\"%d\" state=\"%s\" delay=\"%d\" correction=\"%d\" speed=\"%d\" uncertainty=\"%d\" tblind=\"%d\" timeofday=\"%s\">\n", indent, tvsChange.id, stateToStr (tvsChange.state), dtCorrected, dtCorrection, speed, uncertainty, (opr1.t-opr0.t), this.tvsChange.lineId.timeOfDay()) +
+					(this.opr0 != null ? this.opr0.pr(lvl+1) : "") +
+					(this.opr1 != null ? this.opr1.pr(lvl+1) : "") +
+					(this.tvsBoundary != null ? this.tvsBoundary.pr(lvl+1) : "") +
+					(this.tvsChange != null ? this.tvsChange.pr(lvl+1) : "") +
+				String.format("%s</measurement>\n", indent);
+		}
+		
 		
 }

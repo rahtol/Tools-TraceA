@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,6 +20,7 @@ public class TdbProcessing {
 
 	static HashMap<Integer,Integer> segLength = new HashMap<Integer,Integer>();
 	static JTvsBoundaryTreeSet tvsBoundaries = new JTvsBoundaryTreeSet();
+	static NavigableSet<SegAdjacency> segAdj = new TreeSet<SegAdjacency>();
 	
 	static void processTdb (final File tdbXmlFile) throws IOException, ParserConfigurationException, SAXException
 	{
@@ -46,6 +48,12 @@ public class TdbProcessing {
 					segLength.put(seg, seglen);
 					int segmentidrightdown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdRightDown").item(0).getTextContent().trim());
 					int segmentidrightup = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdRightUp").item(0).getTextContent().trim());
+					int segmentidleftdown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdLeftDown").item(0).getTextContent().trim());
+					int segmentidleftup = Integer.parseInt(eElementItem.getElementsByTagName("SegmentIdLeftUp").item(0).getTextContent().trim());
+					if (segmentidrightdown != 0) segAdj.add(new SegAdjacency(seg, SegAdjacency.DOWN, SegAdjacency.RIGHT, segmentidrightdown));
+					if (segmentidrightup != 0) segAdj.add(new SegAdjacency(seg, SegAdjacency.UP, SegAdjacency.RIGHT, segmentidrightup));
+					if (segmentidleftdown != 0) segAdj.add(new SegAdjacency(seg, SegAdjacency.DOWN, SegAdjacency.LEFT, segmentidleftdown));
+					if (segmentidleftup != 0) segAdj.add(new SegAdjacency(seg, SegAdjacency.UP, SegAdjacency.LEFT, segmentidleftup));
 					int segmentendtypedown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentEndTypeDown").item(0).getTextContent().trim());
 					int segmentendtypeup = Integer.parseInt(eElementItem.getElementsByTagName("SegmentEndTypeUp").item(0).getTextContent().trim());
 					int segmentdirectionrightdown = Integer.parseInt(eElementItem.getElementsByTagName("SegmentDirectionRightDown").item(0).getTextContent().trim());
@@ -104,4 +112,62 @@ public class TdbProcessing {
 			}
 		}
 	}
+	
+	/**
+	 * Calculate a JLocation on the adjacent segment with distance zero to given location "loc"
+	 *  
+	 * @param loc	starting location; prerequisite: must be on segment limit, i.e. offset zero or seglength
+	 * @param rl	selects adjacent segment: SegAdjacency.RIGHT or SegAdjacency.LEFT
+	 * @return		a JLocation object on the adjacent segment specifying same location, i.e. dist=0 or an invalid location if segment does not exist.
+	 */
+	public static JLocation nxSeg(JLocation loc, int rl)
+	{
+		int ud = -1;
+		if (loc.offs == 0) ud = SegAdjacency.DOWN;
+		if (loc.offs == segLength.get(loc.seg)) ud = SegAdjacency.UP;
+		if (ud < 0) return new JLocation(JLocation.INVALIDSEGID,-1,-1);
+		
+		SegAdjacency k = new SegAdjacency(loc.seg, ud, rl, 0);
+		NavigableSet<SegAdjacency> candidates = segAdj.subSet(k,true,k,true);
+		if (candidates.isEmpty()) return new JLocation(JLocation.INVALIDSEGID,-1,-1);
+		int adjseg = candidates.first().adjSegId;
+		int ud2 = findAdjSeg (adjseg, loc.seg);
+		if (ud2 < 0) return new JLocation(JLocation.INVALIDSEGID,-2,-1);
+		
+		int offs = (ud2 == SegAdjacency.DOWN ? 0 : segLength.get(adjseg));
+		EnumOri ori = (ud != ud2 ? loc.ori : loc.ori.invert());
+		return new JLocation (adjseg, offs, ori);
+		
+	}
+	
+	private static int findAdjSeg(int srcSegId, int seg)
+	{
+		SegAdjacency k0 = new SegAdjacency(srcSegId, 0, 0, 0);
+		SegAdjacency k1 = new SegAdjacency(srcSegId, 1, 1, 0);
+		NavigableSet<SegAdjacency> candidates = segAdj.subSet(k0, true, k1, true);
+		Iterator<SegAdjacency> i = candidates.iterator();
+		while(i.hasNext())
+		{
+			SegAdjacency segi = i.next();
+			if (segi.adjSegId == seg)
+			{
+				return segi.ud;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Is there a path from location "from" to location "to".
+	 * @param from		start location of path, input only
+	 * @param to		target location of path. direction irrelevant on input, updated on output
+	 * @param maxdist	maximum distance to be searched
+	 * @return			length in cm of path, negative if there is no path shorter that maxdist
+	 */
+	public static int dist(JLocation from, JLocation to, int maxdist)
+	{
+		// TODO
+		return -1;
+	}
+
 }
