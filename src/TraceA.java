@@ -84,7 +84,7 @@ public class TraceA {
 
 	static void processLog (final File logDataFile) throws Exception
 	{
-		System.out.println("Processing: \"" + logDataFile.getAbsolutePath() + "\"");
+		System.out.println("Processing: \"" + logDataFile.getName() + "\"" + "\t\t tvsChanges.size=" + tvsChanges.size() + ", oprs.size=" + oprs.size());
 		
 		ZipFile zf = null;
 		BufferedReader logDataBr;
@@ -125,6 +125,7 @@ public class TraceA {
 		logDataBr.close();
 		if (zf != null) zf.close();
 
+//		System.out.println("tvsChanges.size=" + tvsChanges.size() + ", oprs.size=" + oprs.size());
 		// System.out.println(tvsChanges);
 		// System.out.println(oprs);
 		

@@ -80,7 +80,8 @@ public class TraceB {
 
 	static void processLog (final File logDataFile) throws Exception
 	{
-		System.out.println("Processing: \"" + logDataFile.getAbsolutePath() + "\"");
+//		System.out.println("Processing: \"" + logDataFile.getAbsolutePath() + "\"");
+		System.out.println("Processing: \"" + logDataFile.getName() + "\"" + "\t\t sievingAttempts.size=" + SusLineParser.sievingAttempts.size() + ", oprs.size=" + oprs.size());
 		
 		ZipFile zf = null;
 		BufferedReader logDataBr;
